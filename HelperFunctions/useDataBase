@@ -1,0 +1,58 @@
+#!/bin/bash
+
+
+function manageDataBase(){
+select choice in tablesEditing tableDataEditing exit
+do
+case $choice in
+tablesEditing)
+	source /home/eladawy/BashProject/HelperFunctions/editingTable ; editingTables $1
+	;;
+tableDataEditing)
+	echo "editingTableData"
+	;;
+exit)
+	echo "---------------------------------------"
+	echo "1) showDataBase"
+	echo "2) createDataBase"
+	echo "3) deleteDataBase"
+	echo "4) useDataBase"	
+	echo "5) exit"     
+	break
+	;;
+*)
+	echo "$REPLY is not found"
+	;;
+esac
+done
+}
+
+
+function useDataBase(){
+DataBasePath=/home/eladawy/BashProject/DataBase/*
+found=0
+dbuse=$1
+echo "---------------------------------------"
+  for file in $DataBasePath
+     do
+      existName=$(basename -- "$file")
+      existDbName="${existName%.*}"
+      if [[ $dbuse == $existDbName ]]
+        then
+      	    echo "DataBase $dbuse is used"
+      	    found=1
+      	    break;
+      fi
+     done
+  if [[ $found == 1 ]]
+     then
+       manageDataBase $dbuse
+     else
+       echo "DataBase Not Found ?"
+  fi
+  
+}
+
+
+export -f useDataBase
+

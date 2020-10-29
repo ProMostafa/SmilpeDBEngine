@@ -1,0 +1,13 @@
+#!/bin/bash
+
+function showDataBase(){
+DataBasePath=/home/eladawy/BashProject/DataBase/*
+echo "List DataBase"
+  for file in $DataBasePath
+     do
+      fileName=$(basename -- "$file")
+      echo "${fileName%.*}"
+     done  	
+}
+
+export -f showDataBase

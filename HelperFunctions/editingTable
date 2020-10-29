@@ -1,0 +1,37 @@
+#!/bin/bash
+
+
+function editingTables(){
+echo "-----------------------------------------"
+select choice in ShowTables Create_Table Drop_Table exit
+do
+case $choice in
+ShowTables)
+	source /home/eladawy/BashProject/HelperFunctions/showTables ; showTables $1
+	;;
+Create_Table)
+	source /home/eladawy/BashProject/HelperFunctions/createTable ; createTables $1
+	;;
+Drop_Table)
+	echo "Enter Table Name ?"
+	read tableName
+	;;
+exit)
+	echo "---------------------------------------"
+	echo "1) tablesEditing"
+	echo "2) tableDataEditing"	
+	echo "3) exit"     
+	break
+	;;
+*)
+	echo "$REPLY is not found"
+	;;
+esac
+done
+}
+
+
+
+
+export -f editingTables
+

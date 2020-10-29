@@ -1,0 +1,13 @@
+#!/bin/bash
+
+function showTables(){
+DataBasePath=/home/eladawy/BashProject/DataBase/$1/*
+echo "List Tables in DataBase $1"
+  for file in $DataBasePath
+     do
+      fileName=$(basename -- "$file")
+      echo "${fileName%.*}"
+     done  	
+}
+
+export -f showTables

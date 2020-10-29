@@ -1,0 +1,28 @@
+#!/bin/bash
+
+function createTables(){
+DataBasePath=/home/eladawy/BashProject/DataBase/$1/*
+echo "---------------------------------------"
+echo "Enter Table Name : "
+read tableName
+echo "Enter Numbers Of Cloumns: "
+read numCols
+typeset -a colName
+typeset -a colType
+echo "ColumnName"
+echo "ColumnType"
+for ((i=0;i<$numCols;i++))
+  do
+    echo "enter Column('$i+1')"
+    read colName[i] 
+    read colType[i]
+  done
+  
+for ((i=0;i<$numCols;i++))
+  do
+    echo "enter Column ($i+1)"
+    echo ${colName[i]} 
+    echo ${colType[i]}
+  done
+}
+export -f createTables

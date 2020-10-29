@@ -1,0 +1,31 @@
+#!/bin/bash
+select choice in showDataBase createDataBase deleteDataBase useDataBase exit
+do
+case $choice in
+showDataBase)
+	source /home/eladawy/BashProject/HelperFunctions/showDataBase ; showDataBase
+	;;
+createDataBase)
+	echo " entre DataBase Name"
+	read dbname
+	source /home/eladawy/BashProject/HelperFunctions/createDataBase; createDataBase $dbname
+	;;
+deleteDataBase)
+	echo "enter DataBase Name"
+	read dbname
+	source /home/eladawy/BashProject/HelperFunctions/deleteDataBase ; deleteDataBase $dbname
+	;;
+useDataBase)
+	echo "enter DataBase Name"
+	read dbname
+	source /home/eladawy/BashProject/HelperFunctions/useDataBase ; useDataBase $dbname
+	;;
+exit)
+	echo "Exit DataBase Engine"
+	exit 0
+	;;
+*)
+	echo "$REPLY is not found"
+	;;
+esac
+done
