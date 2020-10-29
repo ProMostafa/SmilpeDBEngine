@@ -1,28 +1,83 @@
 #!/bin/bash
-
-function createTables(){
 DataBasePath=/home/eladawy/BashProject/DataBase/$1/*
+DataBaselocation=/home/eladawy/BashProject/DataBase/$1
+function createTables(){
 echo "---------------------------------------"
 echo "Enter Table Name : "
 read tableName
-echo "Enter Numbers Of Cloumns: "
-read numCols
-typeset -a colName
-typeset -a colType
-echo "ColumnName"
-echo "ColumnType"
-for ((i=0;i<$numCols;i++))
-  do
-    echo "enter Column('$i+1')"
-    read colName[i] 
-    read colType[i]
-  done
+checkTableName $tableName
+#echo "$?"  stored immediately after the function call in $?
+if [[ $? != 0 ]]
+then
+    echo "Enter Numbers Of Cloumns: "
+    read numCols
+    typeset -a colNameType
+    echo "ColumnName ColumnType [ Pk must be one 'first pk is token ?' ]"
+    for ((i=0;i<$numCols;i++))
+      do
+        let row=i+1 
+        echo "enter Column $row"
+        read col_info 
+        IFS=' ' read -r -a colType <<< "$col_info"
+        checkColType ${colType[1]}
+        if [[ $? == 1 ]]
+          then
+            colNameType[i]=$col_info" "
+        else
+          echo "enter valid dataType { int , float , char , string }"
+          i=$i-1
+       fi 
+      done
+  touch $DataBaselocation/$tableName
   
-for ((i=0;i<$numCols;i++))
-  do
-    echo "enter Column ($i+1)"
-    echo ${colName[i]} 
-    echo ${colType[i]}
-  done
+     
+  printf "%s" "${colNameType[@]}" > $DataBaselocation/$tableName
+  printf "%s\n" >> $DataBaselocation/$tableName
+  echo "Table $tableName created."
+fi
+
 }
+
+function checkTableName(){
+
+for file in $DataBasePath
+     do
+      existName=$(basename -- "$file")
+      existTableName="${existName%.*}"
+      if [[ $1 == $existTableName ]]
+        then
+      	    echo "Table $1 Already Exist !"
+      	    return 0
+      fi
+     done
+
+return 1
+}
+
+function checkColType(){
+case $1 in
+
+  "int")
+    return 1
+    ;;
+
+  "float")
+    return 1
+    ;;
+
+  "char")
+    return 1
+    ;;
+   "string")
+    return 1
+    ;;
+
+  *)
+    return 0
+    ;;
+esac
+}
+
+
+
 export -f createTables

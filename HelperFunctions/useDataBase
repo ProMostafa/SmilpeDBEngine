@@ -1,15 +1,16 @@
 #!/bin/bash
 
+Path=/home/eladawy/BashProject/HelperFunctions
 
 function manageDataBase(){
 select choice in tablesEditing tableDataEditing exit
 do
 case $choice in
 tablesEditing)
-	source /home/eladawy/BashProject/HelperFunctions/editingTable ; editingTables $1
+	source $Path/editingTable ; editingTables $1
 	;;
 tableDataEditing)
-	echo "editingTableData"
+	source $Path/editingTableData ; editingTablesData $1
 	;;
 exit)
 	echo "---------------------------------------"

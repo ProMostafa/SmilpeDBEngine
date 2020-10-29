@@ -1,0 +1,60 @@
+#!/bin/bash
+
+
+Path=/home/eladawy/BashProject/HelperFunctions
+DataBaselocation=/home/eladawy/BashProject/DataBase/$1
+function editingTablesData(){
+echo "-----------------------------------------"
+echo "Enter Table Name"
+read tableName
+checkTableExist $tableName 
+if [[ $? == 1 ]] 
+ then 
+     echo "-----------------------------------------"
+     echo "Table $tableName selected Can Do :"
+     select choice in insert update delete exit
+     do
+       case $choice in
+         insert)
+	      source $Path/manipulateTableData ; insert $1 $tableName
+	      ;;
+         update)
+	      source $Path/manipulateTableData ; update $1 $tableName
+	      ;;
+        delete)
+	      source $Path/manipulateTableData ; delete $1 $tableName
+	      ;;
+        exit)
+	     echo "---------------------------------------"
+	     echo "1) tablesEditing"
+	     echo "2) tableDataEditing"	
+	     echo "3) exit"     
+	     break
+	     ;;
+        *)
+	    echo "$REPLY is not found"
+	    ;;
+      esac
+    done
+  else
+    echo "Table $tableName Not Exist !"
+  fi
+}
+
+
+function checkTableExist(){
+for file in $DataBasePath
+     do
+      existName=$(basename -- "$file")
+      existTableName="${existName%.*}"
+      if [[ $1 == $existTableName ]]
+        then
+          return 1     
+      fi
+     done
+return 0
+}
+
+
+export -f editingTablesData
+

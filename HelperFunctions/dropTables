@@ -1,0 +1,28 @@
+#!/bin/bash
+
+DataBasePath=/home/eladawy/BashProject/DataBase/$1/*
+DataBaseLocation=/home/eladawy/BashProject/DataBase/$1
+
+function dropTables(){
+found=0
+echo "Enter Table Name ?"
+read tableName
+  for file in $DataBasePath
+     do
+      fileName=$(basename -- "$file")
+      if [[ $tableName == "${fileName%.*}" ]]
+        then 
+          rm $DataBaseLocation/$tableName
+          found=1
+          echo "Drop Table $tableName"
+          break
+      fi
+     done  
+ 
+ 
+   if [[ $found == 0 ]];then 
+     echo "Table $tableName Not Found !"
+   fi
+}
+
+export -f dropTables
