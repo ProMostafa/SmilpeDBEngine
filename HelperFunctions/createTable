@@ -2,6 +2,9 @@
 DataBasePath=/home/eladawy/BashProject/DataBase/$1/*
 DataBaselocation=/home/eladawy/BashProject/DataBase/$1
 function createTables(){
+typeset -a colNames
+typeset -a colTypes
+pk=""
 echo "---------------------------------------"
 echo "Enter Table Name : "
 read tableName
@@ -18,11 +21,18 @@ then
         let row=i+1 
         echo "enter Column $row"
         read col_info 
-        IFS=' ' read -r -a colType <<< "$col_info"
-        checkColType ${colType[1]}
+        IFS=' ' read -r -a col_values <<< "$col_info"
+        checkColType ${col_values[1]}
         if [[ $? == 1 ]]
           then
-            colNameType[i]=$col_info" "
+            #colNameType[i]=$col_info" "
+            colNames[i]=${col_values[0]}"#"
+            colTypes[i]=${col_values[1]}"#"
+             if [[ ${#col_values[@]} == 3 ]] #get primary key
+               then 
+                 #pk=${col_values[0]}
+                 pk=$i
+              fi
         else
           echo "enter valid dataType { int , float , char , string }"
           i=$i-1
@@ -30,9 +40,18 @@ then
       done
   touch $DataBaselocation/$tableName
   
+     #echo "${colNames[@]}"
+     #echo "${colTypes[@]}"
+     #echo "$pk"
      
-  printf "%s" "${colNameType[@]}" > $DataBaselocation/$tableName
+  # first 3 line is reserved for table_info
+  printf "%s" "${colNames[@]}" > $DataBaselocation/$tableName
   printf "%s\n" >> $DataBaselocation/$tableName
+  printf "%s" "${colTypes[@]}" >> $DataBaselocation/$tableName
+  printf "%s\n" >> $DataBaselocation/$tableName
+  printf "%s" "$pk" >> $DataBaselocation/$tableName
+  printf "%s\n" >> $DataBaselocation/$tableName
+  
   echo "Table $tableName created."
 fi
 

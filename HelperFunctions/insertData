@@ -1,0 +1,144 @@
+#!/bin/bash
+
+DataBasePath=/home/eladawy/BashProject/DataBase/$1/*
+DataBaseLocation=/home/eladawy/BashProject/DataBase/$1
+colNames=""
+col2=""
+pk=""
+typeset -a colTypes
+typeset -a col_values
+
+function insert(){
+
+colNames=$(awk 'NR==1 {print; exit}' $DataBaseLocation/$2)
+col2=$(awk 'NR==2 {print; exit}' $DataBaseLocation/$2)
+typeset -i pk=$(awk 'NR==3 {print; exit}' $DataBaseLocation/$2)
+pk="$((pk))"
+IFS='#' read -r -a colTypes <<< "$col2"
+
+ echo "insert Values sparetor by #:"
+ echo "Table Values: $colNames"
+ read line
+ IFS='#' read -r -a col_values <<< "$line"
+ IFS='#' read -r -a colNames <<< "$colNames"
+ 
+ validationData
+ if [[ $? == 1 ]]
+   then
+     newpk="${col_values[pk]}"
+     found=$(awk -v pk="$newpk" -F'#' 'NR > 3 && $1 == pk{print 1;exit}' $DataBaselocation/$2)
+     #echo "$found"
+    if [[ $found != 1 ]]
+      then
+        printf "%s" "$line" >> $DataBaselocation/$2
+        printf "%s\n" >> $DataBaselocation/$2
+        echo "insert 1 row"
+     else
+       echo "PrimaryKeyError: Pk Must Be Unique value for ${colNames[$pk]}"
+    fi
+  fi 
+}
+
+
+
+function validationData(){
+length="${#col_values[@]}"
+for ((i=0; i < $length ; i++))
+do
+case "${colTypes[i]}" in
+
+  "int")
+    int_valid "${col_values[i]}"
+    if [[ $? == 0 ]]
+      then 
+        echo "DataError: enter ${colTypes[i]} value for ${colNames[i]}"
+        return 0
+     fi
+    ;;
+
+  "float")
+    float_valid "${col_values[i]}"
+    if [[ $? == 0 ]]
+      then 
+        echo "DataError: enter ${colTypes[i]} value for ${colNames[i]}"
+        return 0
+     fi
+    ;;
+
+  "char")
+    char_valid "${col_values[i]}"
+    if [[ $? == 0 ]]
+      then 
+        echo "DataError: enter ${colTypes[i]} value for ${colNames[i]}"
+        return 0
+     fi
+    ;;
+
+  "string")
+    string_valid "${col_values[i]}"
+    if [[ $? == 0 ]]
+      then 
+        echo "DataError: enter ${colTypes[i]} value for ${colNames[i]}"
+        return 0
+     fi
+    ;;
+esac
+done
+return 1
+}
+
+
+function int_valid(){
+value=$1
+isdigit=`expr match "$value" '[0-9]*'`
+len=${#value}
+if [ $len == $isdigit ]
+  then 
+    return 1
+  else
+    return 0  
+ fi
+}
+
+function float_valid(){
+value=$1
+len=${#value}
+#isfloat=`expr match "$value" '^[0-9]+\.?[0-9]*$'`
+if [[ $value =~ ^[0-9]+\.?[0-9]*$ ]]
+  then
+    return 1
+  else
+    return 0  
+ fi
+}
+
+function string_valid(){
+value=$1
+value="${value,,}"
+str=`expr match "$value" '[a-zA-Z]*'`
+len=${#value}
+if [ $len == $str ]
+  then 
+    return 1
+  else
+    return 0  
+ fi
+
+}
+
+function char_valid(){
+value=$1
+str=`expr match "$value" '[a-zA-Z]'`
+len=${#value}
+if [[ $len == $str && $len == 1 ]]
+  then 
+    return 1
+  else
+    return 0  
+ fi
+}
+
+export -f insert
+
+
+

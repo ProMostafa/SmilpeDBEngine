@@ -1,0 +1,12 @@
+#!/bin/bash
+
+DataBasePath=/home/eladawy/BashProject/DataBase/$1/*
+DataBaseLocation=/home/eladawy/BashProject/DataBase/$1
+
+function display(){
+	awk '{if(NR > 3) print}' $DataBaselocation/$2
+}
+
+
+export -f display
+

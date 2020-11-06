@@ -12,17 +12,20 @@ if [[ $? == 1 ]]
  then 
      echo "-----------------------------------------"
      echo "Table $tableName selected Can Do :"
-     select choice in insert update delete exit
+     select choice in displayrecords insert update delete exit
      do
        case $choice in
+         displayrecords)
+	      source $Path/displayRecords ; display  "$1" "$tableName"
+	      ;;
          insert)
-	      source $Path/manipulateTableData ; insert $1 $tableName
+	      source $Path/insertData ; insert  "$1" "$tableName"
 	      ;;
          update)
-	      source $Path/manipulateTableData ; update $1 $tableName
+	      source $Path/updateData ; update "$1" "$tableName"
 	      ;;
         delete)
-	      source $Path/manipulateTableData ; delete $1 $tableName
+	      source $Path/deleteData ; delete "$1" "$tableName"
 	      ;;
         exit)
 	     echo "---------------------------------------"

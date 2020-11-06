@@ -1,0 +1,30 @@
+#!/bin/bash
+
+DataBasePath=/home/eladawy/BashProject/DataBase/$1/*
+DataBaseLocation=/home/eladawy/BashProject/DataBase/$1
+
+function update(){
+ echo "enter record pk:"
+ read pk
+     numberRecord=$(awk -v pk="$pk" -F'#' 'NR > 3 && $1 == pk{print NR;exit}' $DataBaselocation/$2)
+     #echo "$numberRecord"
+     if [[ $numberRecord > 0 ]]
+     	then
+     	recordData=$(awk 'NR==1 {print; exit}' $DataBaseLocation/$2)
+     	oldRecord=$(awk -v r=$numberRecord ' NR == r {print; exit}' $DataBaseLocation/$2)
+     	echo "$recordData"
+     	echo "old Record: $oldRecord"
+     	echo "enter New Record: "
+     	read updateLine
+     	sed -i.bak -e "$numberRecord"'d' $DataBaselocation/$2
+     	printf "%s" "$updateLine" >> $DataBaselocation/$2
+        printf "%s\n" >> $DataBaselocation/$2
+        echo "update 1 row"
+     else
+     	echo "record not found ???"
+     fi
+}
+
+
+export -f update
+

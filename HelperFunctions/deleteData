@@ -1,0 +1,22 @@
+#!/bin/bash
+
+DataBasePath=/home/eladawy/BashProject/DataBase/$1/*
+DataBaseLocation=/home/eladawy/BashProject/DataBase/$1
+
+function delete(){
+ echo "enter record pk:"
+ read pk
+     numberRecord=$(awk -v pk="$pk" -F'#' 'NR > 3 && $1 == pk{print NR;exit}' $DataBaselocation/$2)
+     #echo "$numberRecord"
+     if [[ $numberRecord > 0 ]]
+     	then
+     	sed -i.bak -e "$numberRecord"'d' $DataBaselocation/$2
+     	echo "-----------record deleted ...."
+     else
+     	echo "record not found ???"
+     fi
+}
+
+
+export -f delete
+
