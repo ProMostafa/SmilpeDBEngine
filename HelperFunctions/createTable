@@ -59,10 +59,13 @@ fi
 
 function checkTableName(){
 
+ #echo $DataBasePath
 for file in $DataBasePath
      do
       existName=$(basename -- "$file")
       existTableName="${existName%.*}"
+      #echo $1
+      #echo $existTableName
       if [[ $1 == $existTableName ]]
         then
       	    echo "Table $1 Already Exist !"
